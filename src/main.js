@@ -1,22 +1,26 @@
-// Code Practice: Slime World
-// Name: 
-// Date: 
+// This demo is a mashup of several of Nathan's, primarily
+// https://github.com/nathanaltice/Mappy - Tiled integration and physics setup
+// https://github.com/nathanaltice/FSM - Player movement & animations
 
-let config = {
-    type: Phaser.AUTO,
-    render: {
-        pixelArt: true
-    },
-    width: 320,
-    height: 240,
-    physics: {
-        default: "arcade",
-        arcade: {
-            debug: true
-        }
-    },
-    zoom: 2,
-    scene: [ Overworld ]
-}
+// =================================================
+// Running sprite asset thanks to https://quin-n.itch.io/free-platformer-character
 
-const game = new Phaser.Game(config)
+
+
+const config = {
+  parent: "phaser-game",
+  type: Phaser.WEBGL,
+  width: 500,
+  height: 500,
+  pixelArt: true,
+  physics: {
+    default: "arcade",
+    // arcade: {
+    //   debug: true,
+    // },
+  },
+  scene: [Level1_Preload, Level1_Pixel],
+  // scene: [Level2_Preload, Level2_Highres],
+};
+
+const game = new Phaser.Game(config);

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="20" height="10" tilewidth="100" tileheight="100" infinite="0" nextlayerid="9" nextobjectid="41">
+ <editorsettings>
+  <export target="level2_highres.json" format="json"/>
+ </editorsettings>
+ <tileset firstgid="1" name="grays_100px" tilewidth="100" tileheight="100" tilecount="10" columns="10">
+  <image source="tilesets/grays_100px.png" width="1000" height="100"/>
+ </tileset>
+ <tileset firstgid="11" name="shapes_highres" tilewidth="1000" tileheight="293" tilecount="1" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <tile id="2">
+   <image width="1000" height="293" source="objects/moutnains-transp.png"/>
+  </tile>
+ </tileset>
+ <layer id="1" name="BaseColor" width="20" height="10">
+  <data encoding="csv">
+3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3
+</data>
+ </layer>
+ <objectgroup id="8" name="Background"/>
+ <objectgroup id="7" name="Midground"/>
+ <objectgroup id="3" name="Foreground">
+  <object id="38" gid="13" x="-3.83219" y="599.198" width="1000" height="293"/>
+  <object id="39" gid="13" x="994.438" y="602.569" width="1000" height="293"/>
+ </objectgroup>
+ <layer id="2" name="Platforms" width="20" height="10">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4
+</data>
+ </layer>
+ <objectgroup id="4" name="Positions">
+  <object id="40" name="playerStart" x="177.126" y="435.223">
+   <point/>
+  </object>
+ </objectgroup>
+</map>
