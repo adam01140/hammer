@@ -1,26 +1,23 @@
-// This demo is a mashup of several of Nathan's, primarily
-// https://github.com/nathanaltice/Mappy - Tiled integration and physics setup
-// https://github.com/nathanaltice/FSM - Player movement & animations
+// Code Practice: Scrolling States
+// Name:
+// Date: 
 
-// =================================================
-// Running sprite asset thanks to https://quin-n.itch.io/free-platformer-character
-
-
+'use strict'
 
 const config = {
-  parent: "phaser-game",
-  type: Phaser.WEBGL,
-  width: 500,
-  height: 500,
-  pixelArt: true,
-  physics: {
-    default: "arcade",
-    // arcade: {
-    //   debug: true,
-    // },
-  },
-  scene: [Level1_Preload, Level1_Pixel],
-  // scene: [Level2_Preload, Level2_Highres],
-};
+    parent: 'phaser-game',  // for info text
+    type: Phaser.WEBGL,     // for tinting
+    width: 400,
+    height: 300,
+    pixelArt: true,
+    zoom: 2,
+    physics: {
+        default: "arcade",
+        arcade: {
+            debug: true
+        }
+    },
+    scene: [ Load, Play ]
+}
 
-const game = new Phaser.Game(config);
+const game = new Phaser.Game(config)
