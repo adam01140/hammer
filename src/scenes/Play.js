@@ -5,11 +5,13 @@ var health = 0
 // Enemy class
 class Enemy extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
-        super(scene, x, y, 'block'); // Replace 'enemyTexture' with your loaded asset key
+        super(scene, x, y, 'block2'); // Replace 'enemyTexture' with your loaded asset key
         scene.add.existing(this);
         scene.physics.add.existing(this);
         this.body.setCollideWorldBounds(true);
     }
+	
+	
 
     update(player) {
         // Follow player logic
@@ -81,7 +83,7 @@ this.physics.world.setBounds(0, 0, this.map.width, this.map.height);
 update() {
 	
 
-	if(Math.abs(this.enemy.x - this.hero.x) > 20 && Math.abs(this.enemy.y - this.hero.y) > 20){
+	if(Math.abs(this.enemy.x - this.hero.x) > 20 || Math.abs(this.enemy.y - this.hero.y) > 20){
             this.enemy.update(this.hero);
         }
 		
