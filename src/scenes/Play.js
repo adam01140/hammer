@@ -1,4 +1,7 @@
 
+
+var health = 0
+
 // Enemy class
 class Enemy extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
@@ -10,9 +13,6 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     update(player) {
         // Follow player logic
-		
-		
-		
         this.scene.physics.moveToObject(this, player, 100); // Adjust speed as needed
     }
 }
@@ -29,6 +29,12 @@ class Play extends Phaser.Scene {
     create() {
         // add background image
         
+
+		// Create health display text
+		
+    
+	
+	
         this.map = this.add.image(0,0,'map').setOrigin(0)
 
         // add new Hero to scene (scene, x, y, key, frame, direction)
@@ -41,7 +47,9 @@ class Play extends Phaser.Scene {
 		this.keys.SPACEKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
 
 		this.enemy = new Enemy(this, this.hero.x + 50, this.hero.y); // Adjust position as needed
-
+		
+		this.playerHealth = 100;
+		this.healthText = this.add.text(200, 160, 'Health: 100', { fontSize: '12px', fill: '#fff' }).setScrollFactor(0);
 
     // Setup keyboard input
     // Your existing keyboard setup code
@@ -95,6 +103,12 @@ update() {
 	
   // make sure we step (update) the hero's state machine
   this.heroFSM.step();
+  
+  this.enemy.anims.play('walk-down', true);
+  
+  this.healthText.setText('Health: ' + health);
+  //alert("hello" + health);
+  
 }
 
 }

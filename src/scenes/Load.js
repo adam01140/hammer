@@ -12,6 +12,13 @@ class Load extends Phaser.Scene {
         frameWidth: 32,
         frameHeight: 32,
     });
+	
+	this.load.spritesheet('enemy', 'hero-sheet.png', {
+        frameWidth: 32,
+        frameHeight: 32,
+    });
+	
+	
     this.load.image('map', 'map-scroll.jpg');
     // Add this line to load the block.png
     this.load.image('block', 'block.png');
@@ -19,6 +26,37 @@ class Load extends Phaser.Scene {
 
 
     create() {
+		
+		
+		
+		this.anims.create({
+            key: 'walk-down',
+            frameRate: 8,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('enemy', { start: 0, end: 3 }),
+        })
+        this.anims.create({
+            key: 'walk-right',
+            frameRate: 8,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('enemy', { start: 4, end: 7 }),
+        })
+        this.anims.create({
+            key: 'walk-up',
+            frameRate: 8,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('enemy', { start: 8, end: 11 }),
+        })
+        this.anims.create({
+            key: 'walk-left',
+            frameRate: 8,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('enemy', { start: 12, end: 15 }),
+        })
+		
+		
+		
+		
         // hero animations (walking)
         this.anims.create({
             key: 'walk-down',
