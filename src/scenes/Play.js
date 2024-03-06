@@ -1,3 +1,23 @@
+
+// Enemy class
+class Enemy extends Phaser.Physics.Arcade.Sprite {
+    constructor(scene, x, y) {
+        super(scene, x, y, 'block'); // Replace 'enemyTexture' with your loaded asset key
+        scene.add.existing(this);
+        scene.physics.add.existing(this);
+        this.body.setCollideWorldBounds(true);
+    }
+
+    update(player) {
+        // Follow player logic
+        this.scene.physics.moveToObject(this, player, 100); // Adjust speed as needed
+    }
+}
+
+
+
+
+
 class Play extends Phaser.Scene {
     constructor() {
         super("playScene")
@@ -16,6 +36,7 @@ class Play extends Phaser.Scene {
         this.keys.HKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H)
         this.keys.FKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F)
 
+		this.enemy = new Enemy(this, this.hero.x + 50, this.hero.y); // Adjust position as needed
 
 
     // Setup keyboard input
@@ -46,6 +67,15 @@ this.physics.world.setBounds(0, 0, this.map.width, this.map.height);
 
     
 update() {
+	
+
+	if (this.enemy) {
+            this.enemy.update(this.hero);
+        }
+		
+		
+	//this.hero.y = this.hero.y + 10;
+	
   // make sure we step (update) the hero's state machine
   this.heroFSM.step();
 }
