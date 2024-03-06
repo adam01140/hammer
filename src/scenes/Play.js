@@ -10,6 +10,9 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     update(player) {
         // Follow player logic
+		
+		
+		
         this.scene.physics.moveToObject(this, player, 100); // Adjust speed as needed
     }
 }
@@ -35,6 +38,7 @@ class Play extends Phaser.Scene {
         this.keys = this.input.keyboard.createCursorKeys()
         this.keys.HKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H)
         this.keys.FKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F)
+		this.keys.SPACEKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
 
 		this.enemy = new Enemy(this, this.hero.x + 50, this.hero.y); // Adjust position as needed
 
@@ -69,10 +73,23 @@ this.physics.world.setBounds(0, 0, this.map.width, this.map.height);
 update() {
 	
 
-	if (this.enemy) {
+	if(Math.abs(this.enemy.x - this.hero.x) > 20 && Math.abs(this.enemy.y - this.hero.y) > 20){
             this.enemy.update(this.hero);
         }
 		
+		
+	if (this.physics.overlap(this.hero, this.enemy)) {
+        if (this.heroFSM.state === 'swing') { // Assuming heroFSM is accessible and stores the current state
+            const direction = new Phaser.Math.Vector2(this.enemy.x - this.hero.x, this.enemy.y - this.hero.y).normalize().scale(200);
+            this.enemy.setVelocity(direction.x, direction.y);
+
+            // Optional: Reset enemy velocity after a delay
+            this.time.delayedCall(500, () => {
+                this.enemy.setVelocity(0, 0);
+            });
+        }
+    }
+	
 		
 	//this.hero.y = this.hero.y + 10;
 	
