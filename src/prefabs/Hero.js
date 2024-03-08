@@ -38,6 +38,7 @@ class IdleState extends State {
         // use destructuring to make a local copy of the keyboard object
         const { left, right, up, down, space, shift } = scene.keys
         const HKey = scene.keys.HKey
+		const QKey = scene.keys.QKey
         const FKey = scene.keys.FKey
         // transition to swing if pressing space
         if(Phaser.Input.Keyboard.JustDown(space)) {
@@ -131,13 +132,16 @@ class MoveState extends State {
 
 class SwingState extends State {
     enter(scene, hero) {
-        hero.setVelocity(0)
-        hero.anims.play(`swing-${hero.direction}`)
+        hero.setVelocity(0);
+        hero.anims.play(`swing-${hero.direction}`);
+        scene.sound.play('swingSound'); // This line plays the swing sound effect
+
         hero.once('animationcomplete', () => {
-            this.stateMachine.transition('idle')
-        })
+            this.stateMachine.transition('idle');
+        });
     }
 }
+
 
 class DashState extends State {
     enter(scene, hero) {
