@@ -19,7 +19,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     update(player) {
         // Update the position of the health text to follow the enemy
         this.healthText.setPosition(this.x-9, this.y - 20);
-
+		this.anims.play('walk-down', true);
         // Existing logic to move toward the player
         this.scene.physics.moveToObject(this, player, 10);
     }
@@ -45,11 +45,15 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 class Play extends Phaser.Scene {
     constructor() {
         super("playScene")
+		this.enemies = []; // Array to hold all enemies
     }
 
     create() {
 
 
+	
+
+	
 
 	const { width, height } = this.sys.game.config;
 
@@ -112,14 +116,65 @@ this.physics.world.setBounds(0, 0, this.map.width, this.map.height);
         // update instruction text
         document.getElementById('info').innerHTML = "<strong>CharacterFSM.js</strong> Arrows: move | SPACE: attack | SHIFT: dash attack | F: spin attack | H: hurt (knockback) | D: debug (toggle)"
 
+
+
+
+}
+
+
+
+
+
+spawnEnemies(numberOfEnemies) {
+        for (let i = 0; i < numberOfEnemies; i++) {
+            // Calculate a random position for each enemy
+            let x = Phaser.Math.Between(100, this.sys.game.config.width - 100);
+            let y = Phaser.Math.Between(100, this.sys.game.config.height - 100);
+
+            // Create a new enemy and add it to the enemies array
+            let enemy = new Enemy(this, x, y);
+            this.enemies.push(enemy);
+
+            // Optionally, add collision or overlap with other objects
+            this.physics.add.collider(enemy, this.platforms);
+            this.physics.add.overlap(this.hero, enemy, this.handleHeroEnemyCollision, null, this);
         }
+    }
+
+    handleHeroEnemyCollision(hero, enemy) {
+    // Handle collision: damage the enemy, apply knockback, etc.
+    if (this.heroFSM.state === 'swing') {
+        // Calculate the knockback direction from the hero to the enemy
+        const direction = new Phaser.Math.Vector2(enemy.x - hero.x, enemy.y - hero.y).normalize().scale(600);
+
+        // Apply knockback velocity to the enemy
+        enemy.setVelocity(direction.x, direction.y);
+
+        // Apply damage to the enemy
+        enemy.takeDamage(1);
+
+        // Optional: Reset enemy velocity after a delay
+        this.time.delayedCall(500, () => {
+            enemy.setVelocity(0, 0);
+        });
+    }
+}
+
+
+
 
     
 update() {
 	
+
+	
+	this.enemies.forEach(enemy => {
+        enemy.update(this.hero); // This should handle movement and animation
+    });
 	
 	if (Phaser.Input.Keyboard.JustDown(this.keys.QKey)) {
-        this.scene.start('playScene2');
+        //this.scene.start('playScene2');
+		this.spawnEnemies(10);
     }
 	
 	
@@ -153,10 +208,10 @@ update() {
   
   this.enemy.anims.play('walk-down', true);
   
+  
   this.enemy.healthText.setPosition(this.enemy.x-9, this.enemy.y - 20);
 
 
 }
 
 }
-//s
