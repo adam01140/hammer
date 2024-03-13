@@ -32,20 +32,33 @@ class Play extends Phaser.Scene {
 
 
 
-		const { width, height } = this.sys.game.config;
+	const { width, height } = this.sys.game.config;
 
-		// Add background image and scale it to fit the screen
-		this.map = this.add.image(0, 0, 'map').setOrigin(0).setDisplaySize(width, height);
+    // First, add the map to the scene
+    this.map = this.add.image(0, 0, 'map').setOrigin(0);
 
+    // Now that this.map is defined, you can access its properties
+    const scaleX = width / this.map.displayWidth; // Use displayWidth/displayHeight because the map might be scaled
+    const scaleY = height / this.map.displayHeight;
+    const scale = Math.max(scaleX, scaleY); // Use 'max' to ensure the image covers the whole screen
 
-        // add new Hero to scene (scene, x, y, key, frame, direction)
-        this.hero = new Hero(this, 200, 150, 'hero', 0, 'down')
-		
-		
-		
-		
-		
-		
+    // Apply scale to the map
+    this.map.setScale(scale);
+
+    // Assuming the original size of the map, you may need these if you're setting world bounds based on the original map size
+    const boundsWidth = this.map.displayWidth * scale;
+    const boundsHeight = this.map.displayHeight * scale;
+    this.physics.world.setBounds(0, 0, boundsWidth, boundsHeight);
+
+    // The camera viewport should match the game's width and height
+    this.cameras.main.setViewport(0, 0, width, height);
+
+	
+	
+	
+	
+        // Add the hero to the scene
+        this.hero = new Hero(this, 200, 150, 'hero', 0, 'down');
 
         // setup keyboard input
         this.keys = this.input.keyboard.createCursorKeys()
@@ -77,7 +90,7 @@ class Play extends Phaser.Scene {
 
         // do camera stuff
 this.cameras.main.setBounds(0, 0, this.map.width, this.map.height);
-this.cameras.main.startFollow(this.hero, true, 0.5, 0.5);
+//this.cameras.main.startFollow(this.hero, true, 0.5, 0.5);
 this.physics.world.setBounds(0, 0, this.map.width, this.map.height);
 
 
