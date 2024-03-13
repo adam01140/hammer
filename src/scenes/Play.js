@@ -141,20 +141,14 @@ spawnEnemies(numberOfEnemies) {
         }
     }
 
-    handleHeroEnemyCollision(hero, enemy) {
+    handleHeroEnemyCollision(hero, heroFSM, enemy) {
     // Handle collision: damage the enemy, apply knockback, etc.
-    if (this.heroFSM.state === 'swing') {
-        // Calculate the knockback direction from the hero to the enemy
+    if (heroFSM.state === 'swing') {
         const direction = new Phaser.Math.Vector2(enemy.x - hero.x, enemy.y - hero.y).normalize().scale(600);
-
-        // Apply knockback velocity to the enemy
         enemy.setVelocity(direction.x, direction.y);
-
-        // Apply damage to the enemy
         enemy.takeDamage(1);
-
-        // Optional: Reset enemy velocity after a delay
-        this.time.delayedCall(500, () => {
+        // Accessing time object from the scene
+        hero.scene.time.delayedCall(500, () => {
             enemy.setVelocity(0, 0);
         });
     }
@@ -163,14 +157,56 @@ spawnEnemies(numberOfEnemies) {
 
 
 
+
+
+
+
     
 update() {
 	
 
-	
-	this.enemies.forEach(enemy => {
-        enemy.update(this.hero); // This should handle movement and animation
+this.enemies.forEach(enemy => {
+        if (this.physics.overlap(this.hero, enemy)) {
+            this.handleHeroEnemyCollision(this.hero, this.heroFSM, enemy); // Pass the individual enemy object
+        }
+        enemy.update(this.hero);
     });
+
+    if (Phaser.Input.Keyboard.JustDown(this.keys.QKey)) {
+        this.spawnEnemies(10);
+    }
+
+    this.enemies.forEach(enemy => {
+        if (Math.abs(enemy.x - this.hero.x) > 20 || Math.abs(enemy.y - this.hero.y) > 20) {
+            enemy.update(this.hero);
+        }
+    });
+
+    this.enemies.forEach(enemy => {
+        if (this.physics.overlap(this.hero, enemy)) {
+            if (this.heroFSM.state === 'swing') {
+                const direction = new Phaser.Math.Vector2(enemy.x - this.hero.x, enemy.y - this.hero.y).normalize().scale(600);
+                enemy.setVelocity(direction.x, direction.y);
+                enemy.takeDamage(1);
+                this.time.delayedCall(500, () => {
+                    enemy.setVelocity(0, 0);
+                });
+            }
+        }
+    });
+
+
+
+    this.enemies.forEach(enemy => {
+        enemy.anims.play('walk-down', true);
+        enemy.healthText.setPosition(enemy.x - 9, enemy.y - 20);
+    });
+	
+	
+	
+
+	
+	
 	
 	if (Phaser.Input.Keyboard.JustDown(this.keys.QKey)) {
         //this.scene.start('playScene2');
