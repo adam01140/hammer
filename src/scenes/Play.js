@@ -29,17 +29,23 @@ class Play extends Phaser.Scene {
     }
 
     create() {
-        // add background image
-        
 
-		// Create health display text
-		
-    
-		
-        this.map = this.add.image(0,0,'map').setOrigin(0)
+
+
+		const { width, height } = this.sys.game.config;
+
+		// Add background image and scale it to fit the screen
+		this.map = this.add.image(0, 0, 'map').setOrigin(0).setDisplaySize(width, height);
+
 
         // add new Hero to scene (scene, x, y, key, frame, direction)
         this.hero = new Hero(this, 200, 150, 'hero', 0, 'down')
+		
+		
+		
+		
+		
+		
 
         // setup keyboard input
         this.keys = this.input.keyboard.createCursorKeys()

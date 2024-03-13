@@ -20,7 +20,6 @@ class Load extends Phaser.Scene {
 	
 	this.load.audio('swingSound', 'swing.mp3');
     this.load.image('map', 'map-scroll.jpg');
-    // Add this line to load the block.png
     this.load.image('block', 'block.png');
 }
 
