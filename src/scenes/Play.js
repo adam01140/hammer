@@ -1,23 +1,42 @@
 
 
-var health = 0
+var health = 100
 
 // Enemy class
 class Enemy extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, x, y) {
-        super(scene, x, y, 'block2'); // Replace 'enemyTexture' with your loaded asset key
+    constructor(scene, x, y, health) {
+        super(scene, x, y, 'block2'); // Ensure 'block2' is the correct key for your sprite
         scene.add.existing(this);
         scene.physics.add.existing(this);
         this.body.setCollideWorldBounds(true);
+
+        this.health = 100; // Initialize health
+		this.body.setSize(this.width/2, this.height/2);
+        // Create health text for this enemy
+        this.healthText = scene.add.text(50, 20, '' + this.health, { fontSize: '12px', fill: '#fff' });
     }
-	
-	
 
     update(player) {
-        // Follow player logic
-        this.scene.physics.moveToObject(this, player, 10); // Adjust speed as needed
+        // Update the position of the health text to follow the enemy
+        this.healthText.setPosition(this.x-9, this.y - 20);
+
+        // Existing logic to move toward the player
+        this.scene.physics.moveToObject(this, player, 10);
     }
+	
+	
+	takeDamage(amount) {
+        this.health -= amount;
+        this.healthText.setText('' + this.health); // Update health text
+    }
+	
+	
 }
+
+
+
+
+
 
 
 
@@ -71,12 +90,8 @@ class Play extends Phaser.Scene {
 		this.enemy = new Enemy(this, this.hero.x + 50, this.hero.y); // Adjust position as needed
 		
 		this.playerHealth = 100;
-		this.healthText = this.add.text(200, 160, 'Health: 100', { fontSize: '12px', fill: '#fff' }).setScrollFactor(0);
 
-    // Setup keyboard input
-    // Your existing keyboard setup code
 
-    // Platform Group and collision setup should go here
     this.platforms = this.physics.add.staticGroup();
     const platform = this.platforms.create(this.hero.x + 264, this.hero.y + (this.hero.height / 2), 'block');
     platform.setSize(132, 32).setOrigin(0.5, 0.5);
@@ -107,6 +122,8 @@ update() {
         this.scene.start('playScene2');
     }
 	
+	
+	
 
 	if(Math.abs(this.enemy.x - this.hero.x) > 20 || Math.abs(this.enemy.y - this.hero.y) > 20){
             this.enemy.update(this.hero);
@@ -118,6 +135,9 @@ update() {
             const direction = new Phaser.Math.Vector2(this.enemy.x - this.hero.x, this.enemy.y - this.hero.y).normalize().scale(600);
             this.enemy.setVelocity(direction.x, direction.y);
 
+			this.enemy.takeDamage(1);
+			
+			
             // Optional: Reset enemy velocity after a delay
             this.time.delayedCall(500, () => {
                 this.enemy.setVelocity(0, 0);
@@ -133,9 +153,9 @@ update() {
   
   this.enemy.anims.play('walk-down', true);
   
-  this.healthText.setText('Health: ' + health);
-  //alert("hello" + health);
-  
+  this.enemy.healthText.setPosition(this.enemy.x-9, this.enemy.y - 20);
+
+
 }
 
 }
