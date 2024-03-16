@@ -1,23 +1,42 @@
 
 
-var health = 0
-
+var health = 100
+var go = 0
 // Enemy class
 class Enemy2 extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, x, y) {
-        super(scene, x, y, 'block2'); // Replace 'enemyTexture' with your loaded asset key
+    constructor(scene, x, y, health) {
+        super(scene, x, y, 'block2'); // Ensure 'block2' is the correct key for your sprite
         scene.add.existing(this);
         scene.physics.add.existing(this);
         this.body.setCollideWorldBounds(true);
+
+        this.health = 100; // Initialize health
+		this.body.setSize(this.width/2, this.height/2);
+        // Create health text for this enemy
+        this.healthText = scene.add.text(50, 20, '' + this.health, { fontSize: '12px', fill: '#fff' });
     }
-	
-	
 
     update(player) {
-        // Follow player logic
-        this.scene.physics.moveToObject(this, player, 10); // Adjust speed as needed
+        // Update the position of the health text to follow the enemy
+        this.healthText.setPosition(this.x-9, this.y - 20);
+		this.anims.play('walk-down', true);
+        // Existing logic to move toward the player
+        this.scene.physics.moveToObject(this, player, 10);
     }
+	
+	
+	takeDamage(amount) {
+        this.health -= amount;
+        this.healthText.setText('' + this.health); // Update health text
+    }
+	
+	
 }
+
+
+
+
+
 
 
 
@@ -26,6 +45,7 @@ class Enemy2 extends Phaser.Physics.Arcade.Sprite {
 class Play2 extends Phaser.Scene {
     constructor() {
         super("playScene2")
+		this.enemies = []; // Array to hold all enemies
     }
 
     create() {
@@ -36,7 +56,7 @@ class Play2 extends Phaser.Scene {
 		
     
 	
-        this.map = this.add.image(0,0,'map').setOrigin(0)
+        this.map = this.add.image(-10,-10,'grass').setOrigin(0)
 
         // add new Hero to scene (scene, x, y, key, frame, direction)
         this.hero = new Hero(this, 200, 150, 'hero', 0, 'down')
@@ -51,15 +71,17 @@ class Play2 extends Phaser.Scene {
 		this.enemy2 = new Enemy2(this, this.hero.x + 50, this.hero.y); // Adjust position as needed
 		
 		this.playerHealth = 100;
-		this.healthText = this.add.text(this.enemy2.x, this.enemy2.y, 'Health: 100', { fontSize: '12px', fill: '#fff' }).setScrollFactor(0);
+		//this.healthText = this.add.text(this.enemy2.x, this.enemy2.y, 'Health: 100', { fontSize: '12px', fill: '#fff' }).setScrollFactor(0);
 
     // Setup keyboard input
     // Your existing keyboard setup code
 
     // Platform Group and collision setup should go here
     this.platforms = this.physics.add.staticGroup();
-    const platform = this.platforms.create(this.hero.x + 264, this.hero.y + (this.hero.height / 2), 'block');
-    platform.setSize(132, 32).setOrigin(0.5, 0.5);
+    const platform = this.platforms.create(this.hero.x + 264, this.hero.y + (this.hero.height / 2), 'rock', 5, 5);
+    platform.setSize(this.width/2, this.height/2).setOrigin(0.5, 0.5);
+	
+	
     this.physics.add.collider(this.hero, this.platforms);
 	
         // debug key listener (assigned to D key)
@@ -79,16 +101,99 @@ this.physics.world.setBounds(0, 0, this.map.width, this.map.height);
 
         }
 
+
+
+
+spawnEnemies(numberOfEnemies) {
+        for (let i = 0; i < numberOfEnemies; i++) {
+            // Calculate a random position for each enemy
+            let x = Phaser.Math.Between(100, this.sys.game.config.width - 100);
+            let y = Phaser.Math.Between(100, this.sys.game.config.height - 100);
+
+            // Create a new enemy and add it to the enemies array
+            let enemy2 = new Enemy2(this, x, y);
+            this.enemies.push(enemy2);
+
+            // Optionally, add collision or overlap with other objects
+            this.physics.add.collider(enemy2, this.platforms);
+            this.physics.add.overlap(this.hero, enemy2, this.handleHeroEnemyCollision, null, this);
+        }
+    }
+
+    handleHeroEnemyCollision(hero, heroFSM, enemy2) {
+    // Handle collision: damage the enemy, apply knockback, etc.
+    if (heroFSM.state === 'swing') {
+        const direction = new Phaser.Math.Vector2(enemy2.x - hero.x, enemy2.y - hero.y).normalize().scale(600);
+        enemy2.setVelocity(direction.x, direction.y);
+        enemy2.takeDamage(1);
+        // Accessing time object from the scene
+        hero.scene.time.delayedCall(500, () => {
+            enemy2.setVelocity(0, 0);
+        });
+    }
+}
+
+
+
+
+
+
+
+
     
 update() {
 	
+
+this.enemies.forEach(enemy2 => {
+        if (this.physics.overlap(this.hero, enemy2)) {
+            this.handleHeroEnemyCollision(this.hero, this.heroFSM, enemy2); // Pass the individual enemy object
+        }
+        enemy2.update(this.hero);
+    });
+
+    if (Phaser.Input.Keyboard.JustDown(this.keys.QKey)) {
+		
+        this.spawnEnemies(10);
+		//this.scene.start('playScene2');
+    }
+
+    this.enemies.forEach(enemy2 => {
+        if (Math.abs(enemy2.x - this.hero.x) > 20 || Math.abs(enemy2.y - this.hero.y) > 20) {
+            enemy2.update(this.hero);
+        }
+    });
+
+    this.enemies.forEach(enemy2 => {
+        if (this.physics.overlap(this.hero, enemy2)) {
+            if (this.heroFSM.state === 'swing') {
+                const direction = new Phaser.Math.Vector2(enemy2.x - this.hero.x, enemy2.y - this.hero.y).normalize().scale(600);
+                enemy2.setVelocity(direction.x, direction.y);
+                enemy2.takeDamage(1);
+                this.time.delayedCall(500, () => {
+                    enemy2.setVelocity(0, 0);
+                });
+            }
+        }
+    });
+
+
+
+    this.enemies.forEach(enemy2 => {
+        enemy2.anims.play('walk-down', true);
+        enemy2.healthText.setPosition(enemy2.x - 9, enemy2.y - 20);
+    });
 	
-	this.healthText = this.add.text(this.enemy2.x, this.enemy2.y, 'Health: 100', { fontSize: '12px', fill: '#fff' }).setScrollFactor(0);
+	
+	
+
+
 	
 	
 	if (Phaser.Input.Keyboard.JustDown(this.keys.QKey)) {
-        this.scene.start('playScene');
+        //this.scene.start('playScene2');
+		this.spawnEnemies(10);
     }
+	
 	
 	
 
@@ -102,6 +207,9 @@ update() {
             const direction = new Phaser.Math.Vector2(this.enemy2.x - this.hero.x, this.enemy2.y - this.hero.y).normalize().scale(600);
             this.enemy2.setVelocity(direction.x, direction.y);
 
+			this.enemy2.takeDamage(1);
+			
+			
             // Optional: Reset enemy velocity after a delay
             this.time.delayedCall(500, () => {
                 this.enemy2.setVelocity(0, 0);
@@ -117,9 +225,10 @@ update() {
   
   this.enemy2.anims.play('walk-down', true);
   
-  this.healthText.setText('Health: ' + health);
-  //alert("hello" + health);
   
+  this.enemy2.healthText.setPosition(this.enemy2.x-9, this.enemy2.y - 20);
+
+
 }
 
 }

@@ -1,7 +1,7 @@
 
 
 var health = 100
-
+var go = 0
 // Enemy class
 class Enemy extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, health) {
@@ -173,7 +173,9 @@ this.enemies.forEach(enemy => {
     });
 
     if (Phaser.Input.Keyboard.JustDown(this.keys.QKey)) {
+		
         this.spawnEnemies(10);
+		this.scene.start('playScene2');
     }
 
     this.enemies.forEach(enemy => {
@@ -205,7 +207,7 @@ this.enemies.forEach(enemy => {
 	
 	
 
-	//
+
 	
 	
 	if (Phaser.Input.Keyboard.JustDown(this.keys.QKey)) {
