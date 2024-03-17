@@ -21,7 +21,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.healthText.setPosition(this.x-9, this.y - 20);
 		this.anims.play('walk-down', true);
         // Existing logic to move toward the player
-        this.scene.physics.moveToObject(this, player, 10);
+        this.scene.physics.moveToObject(this, player, 40);
     }
 	
 	

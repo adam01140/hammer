@@ -56,7 +56,7 @@ class Play2 extends Phaser.Scene {
 		
     
 	
-        this.map = this.add.image(-10,-10,'grass').setOrigin(0)
+        this.map = this.add.image(-10,-55,'grass').setOrigin(0)
 
         // add new Hero to scene (scene, x, y, key, frame, direction)
         this.hero = new Hero(this, 200, 150, 'hero', 0, 'down')
@@ -68,7 +68,10 @@ class Play2 extends Phaser.Scene {
         this.keys.FKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F)
 		this.keys.SPACEKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
 
-		this.enemy2 = new Enemy2(this, this.hero.x + 50, this.hero.y); // Adjust position as needed
+		this.enemy2 = new Enemy2(this, this.hero.x + 150, this.hero.y+20); // Adjust position as needed
+		this.spawnEnemies(1,this.hero.x + 170,this.hero.y+90);
+		this.spawnEnemies(1,this.hero.x + 160,this.hero.y+60);
+		this.spawnEnemies(1,this.hero.x + 135,this.hero.y+70);
 		
 		this.playerHealth = 100;
 		//this.healthText = this.add.text(this.enemy2.x, this.enemy2.y, 'Health: 100', { fontSize: '12px', fill: '#fff' }).setScrollFactor(0);
@@ -104,11 +107,11 @@ this.physics.world.setBounds(0, 0, this.map.width, this.map.height);
 
 
 
-spawnEnemies(numberOfEnemies) {
+spawnEnemies(numberOfEnemies,x,y) {
         for (let i = 0; i < numberOfEnemies; i++) {
             // Calculate a random position for each enemy
-            let x = Phaser.Math.Between(100, this.sys.game.config.width - 100);
-            let y = Phaser.Math.Between(100, this.sys.game.config.height - 100);
+            //let x1 = Phaser.Math.Between(100, this.sys.game.config.width - 100);
+            //let y1 = Phaser.Math.Between(100, this.sys.game.config.height - 100);
 
             // Create a new enemy and add it to the enemies array
             let enemy2 = new Enemy2(this, x, y);
@@ -191,7 +194,7 @@ this.enemies.forEach(enemy2 => {
 	
 	if (Phaser.Input.Keyboard.JustDown(this.keys.QKey)) {
         //this.scene.start('playScene2');
-		this.spawnEnemies(10);
+		this.spawnEnemies(10,10,10);
     }
 	
 	
