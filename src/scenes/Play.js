@@ -16,13 +16,17 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.healthText = scene.add.text(50, 20, '' + this.health, { fontSize: '12px', fill: '#fff' });
     }
 
-    update(player) {
-        // Update the position of the health text to follow the enemy
-        this.healthText.setPosition(this.x-9, this.y - 20);
-		this.anims.play('walk-down', true);
-        // Existing logic to move toward the player
-        this.scene.physics.moveToObject(this, player, 40);
-    }
+   
+	
+	
+	
+	update(player) {
+    const speed = 40;
+	this.healthText.setPosition(this.x-9, this.y - 20);
+    const direction = new Phaser.Math.Vector2(player.x+ 610 - this.x, player.y+610 - this.y).normalize();
+    this.body.setVelocity(direction.x * speed, direction.y * speed);
+}
+
 	
 	
 	takeDamage(amount) {
@@ -32,6 +36,9 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 	
 	
 }
+
+
+
 
 
 
@@ -81,8 +88,14 @@ class Play extends Phaser.Scene {
 	
 	
         // Add the hero to the scene
-        this.hero = new Hero(this, 200, 150, 'hero', 0, 'down');
+        this.hero = new Hero(this, 250, 150, 'hero', 0, 'down');
+		this.hero.setScale(0.12);
 
+		this.hero.body.setSize(this.hero.width/2, this.hero.height/2);
+
+
+		
+		
         // setup keyboard input
         this.keys = this.input.keyboard.createCursorKeys()
 		
@@ -91,7 +104,7 @@ class Play extends Phaser.Scene {
         this.keys.FKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F)
 		this.keys.SPACEKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
 
-		this.enemy = new Enemy(this, this.hero.x + 50, this.hero.y); // Adjust position as needed
+		this.enemy = new Enemy(this, 250, 150); // Adjust position as needed
 		
 		this.playerHealth = 100;
 
@@ -163,7 +176,12 @@ spawnEnemies(numberOfEnemies) {
 
     
 update() {
-	
+
+
+//console.log("hero.x: " + this.hero.x)	
+//console.log("enemy.x: " + this.enemy.x)	
+
+
 
 this.enemies.forEach(enemy => {
         if (this.physics.overlap(this.hero, enemy)) {
@@ -175,7 +193,7 @@ this.enemies.forEach(enemy => {
     if (Phaser.Input.Keyboard.JustDown(this.keys.QKey)) {
 		
         this.spawnEnemies(10);
-		this.scene.start('playScene2');
+		//this.scene.start('playScene2');
     }
 
     this.enemies.forEach(enemy => {

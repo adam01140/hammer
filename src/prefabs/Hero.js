@@ -5,7 +5,7 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this)           // add Hero to existing scene
         scene.physics.add.existing(this)   // add physics body to scene
 
-        this.body.setSize(this.width / 2, this.height / 2)
+        this.body.setSize(this.width, this.height)
         this.body.setCollideWorldBounds(true)
 
         // set custom Hero properties
@@ -111,10 +111,10 @@ class MoveState extends State {
         let moveDirection = new Phaser.Math.Vector2(0, 0)
         if(up.isDown) {
             moveDirection.y = -1
-            hero.direction = 'up'
+            //hero.direction = 'up'
         } else if(down.isDown) {
             moveDirection.y = 1
-            hero.direction = 'down'
+            //hero.direction = 'down'
         }
         if(left.isDown) {
             moveDirection.x = -1
