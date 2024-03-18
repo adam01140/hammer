@@ -2,6 +2,8 @@
 
 var health = 100
 var go = 0
+var punchright = 0
+var punchleft = 0
 // Enemy class
 class Enemy extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, health) {
@@ -23,7 +25,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 	update(player) {
     const speed = 40;
     this.healthText.setPosition(this.x-9, this.y - 20);
-    const direction = new Phaser.Math.Vector2(player.x - this.x + 610, player.y - this.y + 610).normalize();
+    const direction = new Phaser.Math.Vector2(player.x - this.x + 0, player.y - this.y + 0).normalize();
     this.body.setVelocity(direction.x * speed, direction.y * speed);
 	
 	//console.log(`Player position: ${player.x}, ${player.y}`);
@@ -42,6 +44,9 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 	
 	
 }
+
+
+
 
 
 
@@ -55,19 +60,19 @@ class Boss extends Phaser.Physics.Arcade.Sprite {
         this.body.setCollideWorldBounds(true);
 
         this.health = 100; // Initialize health
-		this.body.setSize(this.width/2, this.height/2);
+        // Assuming you want to resize the physics body to half its original sprite size
+        this.body.setSize(this.width*6, this.height*7);
+        // Now adjust the offset to ensure the resized body is centered
+        this.body.setOffset(this.width*2, this.height);
+        
         // Create health text for this enemy
         this.healthText = scene.add.text(50, 20, '' + this.health, { fontSize: '12px', fill: '#fff' });
     }
 
-   
-	
-	
-	
-	update(player) {
-    const speed = 40;
+    update(player) {
+    const speed = 100;
     this.healthText.setPosition(this.x-9, this.y - 20);
-    const direction = new Phaser.Math.Vector2(player.x - this.x + 610, player.y - this.y + 610).normalize();
+    const direction = new Phaser.Math.Vector2(player.x - this.x + 0, player.y - this.y + 0).normalize();
     this.body.setVelocity(direction.x * speed, direction.y * speed);
 	
 	//console.log(`Player position: ${player.x}, ${player.y}`);
@@ -84,11 +89,7 @@ class Boss extends Phaser.Physics.Arcade.Sprite {
         this.healthText.setText('' + this.health); // Update health text
     }
 	
-	
 }
-
-
-
 
 
 
@@ -102,9 +103,6 @@ class Play extends Phaser.Scene {
     }
 
     create() {
-
-
-	
 
 	
 
@@ -135,13 +133,7 @@ class Play extends Phaser.Scene {
 	
 	
 	
-        // Add the hero to the scene
-        this.hero = new Hero(this, 250, 150, 'hero', 0, 'down');
-		this.hero.setScale(0.12);
-
-		this.hero.body.setSize(this.hero.width/2, this.hero.height/2);
-
-
+       
 		
 		
         // setup keyboard input
@@ -156,9 +148,15 @@ class Play extends Phaser.Scene {
 		
 		
 		this.boss = new Boss(this, 250, 150); // Adjust position as needed
-		
+		this.boss.setScale(0.5);
 		
 		this.playerHealth = 100;
+
+	 // Add the hero to the scene
+        this.hero = new Hero(this, 250, 150, 'hero', 0, 'down');
+		this.hero.setScale(0.10);
+		this.hero.body.setSize(this.hero.width/4, this.hero.height/4);
+
 
 
     this.platforms = this.physics.add.staticGroup();
@@ -202,44 +200,16 @@ spawnEnemies(numberOfEnemies) {
 
             // Optionally, add collision or overlap with other objects
             this.physics.add.collider(enemy, this.platforms);
-            this.physics.add.overlap(this.hero, enemy, this.handleHeroEnemyCollision, null, this);
+  
+			
+			this.physics.add.collider(this.boss, this.platforms);
+      
         }
     }
 
     
 
 
-handleHeroEnemyCollision(hero, heroFSM, enemy) {
-    // Check if the player is swinging
-    if (heroFSM.state === 'swing') {
-        // Calculate knockback direction based on the enemy's current velocity
-        let knockbackDirection = enemy.body.velocity.clone();
-
-        // If the enemy is not currently moving, default to pushing them directly away from the player
-        if (knockbackDirection.x === 0 && knockbackDirection.y === 0) {
-            knockbackDirection = new Phaser.Math.Vector2(enemy.x - hero.x, enemy.y - hero.y).normalize();
-        } else {
-            // Otherwise, reverse the direction
-            knockbackDirection.negate();
-        }
-
-        const knockbackSpeed = 600; // Adjust the speed to your liking
-        enemy.body.setVelocity(knockbackDirection.x * knockbackSpeed, knockbackDirection.y * knockbackSpeed);
-
-        // Apply damage to the enemy
-        enemy.takeDamage(1);
-
-        // Optional: Reset enemy velocity after a delay to simulate recovery
-        this.time.delayedCall(500, () => {
-            enemy.body.setVelocity(0, 0);
-        });
-
-        // Accessing time object from the scene
-        hero.scene.time.delayedCall(500, () => {
-            enemy.setVelocity(0, 0); // You might not need this line since it's already in the delayed call above
-        });
-    }
-}
 
 
 
@@ -251,26 +221,119 @@ handleHeroEnemyCollision(hero, heroFSM, enemy) {
 
     
 update() {
+	
+	
+	if(punchleft == 1){
+		this.boss.anims.play('walk-down3', true);
+		this.time.delayedCall(500, () => {
+			punchleft = 0;
+        });
+	}
+	
+	if(punchright == 1){
+		this.boss.anims.play('walk-up3', true);
+		this.time.delayedCall(500, () => {
+			punchright = 0;
+        });
+	}
+
+
+if(this.hero.y < this.boss.y-10) {
+        this.hero.setDepth(0); // Ensure hero is drawn above the boss
+        this.boss.setDepth(1); // Ensure boss is drawn below the hero
+    } else {
+        //this.hero.setDepth(1); // Ensure hero is drawn below the boss
+        //this.boss.setDepth(0); // Ensure boss is drawn above the hero
+    }
 
 
 
+if (this.physics.overlap(this.hero, this.boss)) {
+	
+            if (this.heroFSM.state === 'swing') {
+                const direction = new Phaser.Math.Vector2(this.boss.x - this.hero.x, this.boss.y - this.hero.y).normalize().scale(75);
+                this.boss.x = this.boss.x + direction.x
+				this.boss.y = this.boss.y + direction.y
+				this.boss.setVelocity(direction.x, direction.y);
+                console.log(direction.x)
+				
+				
+				this.boss.takeDamage(1);
+                this.time.delayedCall(200, () => {
+                    this.boss.setVelocity(0, 0);
+					punchright = 0;
+					punchleft = 0;
+                });
+            } else {
+				
+				if(this.boss.x > this.hero.x && this.boss.y < this.hero.y+10){
+					
+				
+				this.boss.anims.play('walk-down3', true);
+				this.hero.setDepth(1); // Ensure hero is drawn above the boss
+				this.boss.setDepth(0); // Ensure boss is drawn below the hero
+				const direction2 = new Phaser.Math.Vector2(this.boss.x - this.hero.x, this.boss.y - this.hero.y).normalize().scale(655);
+				punchleft = 1;
+				this.hero.setVelocity(-direction2.x, -direction2.y);
+				
+				this.time.delayedCall(200, () => {
+                    this.hero.setVelocity(0, 0);
+					punchleft = 0;
+                });
+				
+				
+				this.hero.x = this.hero.x - direction2.x/100
+				this.hero.y = this.hero.y - direction2.y/100
+				
+				}
+				
+				if(this.boss.x < this.hero.x && this.boss.y < this.hero.y+10){
+				
+				this.boss.anims.play('walk-up3', true);
+				this.hero.setDepth(1); // Ensure hero is drawn above the boss
+				this.boss.setDepth(0); // Ensure boss is drawn below the hero	
+				const direction2 = new Phaser.Math.Vector2(this.boss.x - this.hero.x, this.boss.y - this.hero.y).normalize().scale(655);
+				punchright = 1;
+				this.hero.setVelocity(-direction2.x, -direction2.y);
+				
+				this.time.delayedCall(200, () => {
+                    this.hero.setVelocity(0, 0);
+                });
+				
+				this.hero.x = this.hero.x - direction2.x/100
+				this.hero.y = this.hero.y - direction2.y/100
+				
+				
+				}
+				
 
-
+					
+			}
+        } else {
+			
+			if(punchleft == 0 && punchright == 0){
+			if(this.boss.x > this.hero.x){
+				this.boss.anims.play('walk-left3', true);
+			} else {
+				this.boss.anims.play('walk-right3', true);
+	
+			}
+			}
+  
+		}
 
 
 this.enemies.forEach(enemy => {
 	
 	enemy.update(this.hero);
-        if (this.physics.overlap(this.hero, enemy)) {
-            this.handleHeroEnemyCollision(this.hero, this.heroFSM, enemy); // Pass the individual enemy object
-        }
+        
         enemy.update(this.hero);
     });
 
     if (Phaser.Input.Keyboard.JustDown(this.keys.QKey)) {
 		
         this.spawnEnemies(10);
-		//this.scene.start('playScene2');
+		this.scene.start('playScene2');
     }
 
     this.enemies.forEach(enemy => {
@@ -322,6 +385,11 @@ this.enemies.forEach(enemy => {
         }
 		
 		
+	if(Math.abs(this.boss.x - this.hero.x) > 20 || Math.abs(this.boss.y - this.hero.y) > 20){
+            this.boss.update(this.hero);
+        }
+		
+		
 	if (this.physics.overlap(this.hero, this.enemy)) {
         if (this.heroFSM.state === 'swing') {
         // Calculate knockback direction based on the enemy's current velocity
@@ -361,7 +429,10 @@ this.enemies.forEach(enemy => {
   
   this.enemy.anims.play('walk-down2', true);
   
-  this.boss.anims.play('walk-down3', true);
+  
+  
+  
+  
   
   this.enemy.healthText.setPosition(this.enemy.x-9, this.enemy.y - 20);
 

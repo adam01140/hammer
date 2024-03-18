@@ -58,8 +58,8 @@ class Play2 extends Phaser.Scene {
 	
         this.map = this.add.image(-10,-55,'grass').setOrigin(0)
 
-        // add new Hero to scene (scene, x, y, key, frame, direction)
-        this.hero = new Hero(this, 200, 150, 'hero', 0, 'down')
+        // add new hero2 to scene (scene, x, y, key, frame, direction)
+        this.hero2 = new hero2(this, 200, 150, 'hero2', 0, 'down')
 
         // setup keyboard input
         this.keys = this.input.keyboard.createCursorKeys()
@@ -68,10 +68,10 @@ class Play2 extends Phaser.Scene {
         this.keys.FKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F)
 		this.keys.SPACEKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
 
-		this.enemy2 = new Enemy2(this, this.hero.x + 150, this.hero.y+20); // Adjust position as needed
-		this.spawnEnemies(1,this.hero.x + 170,this.hero.y+90);
-		this.spawnEnemies(1,this.hero.x + 160,this.hero.y+60);
-		this.spawnEnemies(1,this.hero.x + 135,this.hero.y+70);
+		this.enemy2 = new Enemy2(this, this.hero2.x + 150, this.hero2.y+20); // Adjust position as needed
+		this.spawnEnemies(1,this.hero2.x + 170,this.hero2.y+90);
+		this.spawnEnemies(1,this.hero2.x + 160,this.hero2.y+60);
+		this.spawnEnemies(1,this.hero2.x + 135,this.hero2.y+70);
 		
 		this.playerHealth = 100;
 		//this.healthText = this.add.text(this.enemy2.x, this.enemy2.y, 'Health: 100', { fontSize: '12px', fill: '#fff' }).setScrollFactor(0);
@@ -81,11 +81,11 @@ class Play2 extends Phaser.Scene {
 
     // Platform Group and collision setup should go here
     this.platforms = this.physics.add.staticGroup();
-    const platform = this.platforms.create(this.hero.x + 264, this.hero.y + (this.hero.height / 2), 'rock', 5, 5);
+    const platform = this.platforms.create(this.hero2.x + 264, this.hero2.y + (this.hero2.height / 2), 'rock', 5, 5);
     platform.setSize(this.width/2, this.height/2).setOrigin(0.5, 0.5);
 	
 	
-    this.physics.add.collider(this.hero, this.platforms);
+    this.physics.add.collider(this.hero2, this.platforms);
 	
         // debug key listener (assigned to D key)
         this.input.keyboard.on('keydown-D', function() {
@@ -95,7 +95,7 @@ class Play2 extends Phaser.Scene {
 
         // do camera stuff
 this.cameras.main.setBounds(0, 0, this.map.width, this.map.height);
-this.cameras.main.startFollow(this.hero, true, 0.5, 0.5);
+this.cameras.main.startFollow(this.hero2, true, 0.5, 0.5);
 this.physics.world.setBounds(0, 0, this.map.width, this.map.height);
 
 
@@ -119,18 +119,18 @@ spawnEnemies(numberOfEnemies,x,y) {
 
             // Optionally, add collision or overlap with other objects
             this.physics.add.collider(enemy2, this.platforms);
-            this.physics.add.overlap(this.hero, enemy2, this.handleHeroEnemyCollision, null, this);
+            this.physics.add.overlap(this.hero2, enemy2, this.handlehero2EnemyCollision, null, this);
         }
     }
 
-    handleHeroEnemyCollision(hero, heroFSM, enemy2) {
+    handlehero2EnemyCollision(hero2, hero2FSM, enemy2) {
     // Handle collision: damage the enemy, apply knockback, etc.
-    if (heroFSM.state === 'swing') {
-        const direction = new Phaser.Math.Vector2(enemy2.x - hero.x, enemy2.y - hero.y).normalize().scale(600);
+    if (hero2FSM.state === 'swing') {
+        const direction = new Phaser.Math.Vector2(enemy2.x - hero2.x, enemy2.y - hero2.y).normalize().scale(600);
         enemy2.setVelocity(direction.x, direction.y);
         enemy2.takeDamage(1);
         // Accessing time object from the scene
-        hero.scene.time.delayedCall(500, () => {
+        hero2.scene.time.delayedCall(500, () => {
             enemy2.setVelocity(0, 0);
         });
     }
@@ -148,10 +148,10 @@ update() {
 	
 
 this.enemies.forEach(enemy2 => {
-        if (this.physics.overlap(this.hero, enemy2)) {
-            this.handleHeroEnemyCollision(this.hero, this.heroFSM, enemy2); // Pass the individual enemy object
+        if (this.physics.overlap(this.hero2, enemy2)) {
+            this.handlehero2EnemyCollision(this.hero2, this.hero2FSM, enemy2); // Pass the individual enemy object
         }
-        enemy2.update(this.hero);
+        enemy2.update(this.hero2);
     });
 
     if (Phaser.Input.Keyboard.JustDown(this.keys.QKey)) {
@@ -161,15 +161,15 @@ this.enemies.forEach(enemy2 => {
     }
 
     this.enemies.forEach(enemy2 => {
-        if (Math.abs(enemy2.x - this.hero.x) > 20 || Math.abs(enemy2.y - this.hero.y) > 20) {
-            enemy2.update(this.hero);
+        if (Math.abs(enemy2.x - this.hero2.x) > 20 || Math.abs(enemy2.y - this.hero2.y) > 20) {
+            enemy2.update(this.hero2);
         }
     });
 
     this.enemies.forEach(enemy2 => {
-        if (this.physics.overlap(this.hero, enemy2)) {
-            if (this.heroFSM.state === 'swing') {
-                const direction = new Phaser.Math.Vector2(enemy2.x - this.hero.x, enemy2.y - this.hero.y).normalize().scale(600);
+        if (this.physics.overlap(this.hero2, enemy2)) {
+            if (this.hero2FSM.state === 'swing') {
+                const direction = new Phaser.Math.Vector2(enemy2.x - this.hero2.x, enemy2.y - this.hero2.y).normalize().scale(600);
                 enemy2.setVelocity(direction.x, direction.y);
                 enemy2.takeDamage(1);
                 this.time.delayedCall(500, () => {
@@ -200,14 +200,14 @@ this.enemies.forEach(enemy2 => {
 	
 	
 
-	if(Math.abs(this.enemy2.x - this.hero.x) > 20 || Math.abs(this.enemy2.y - this.hero.y) > 20){
-            this.enemy2.update(this.hero);
+	if(Math.abs(this.enemy2.x - this.hero2.x) > 20 || Math.abs(this.enemy2.y - this.hero2.y) > 20){
+            this.enemy2.update(this.hero2);
         }
 		
 		
-	if (this.physics.overlap(this.hero, this.enemy2)) {
-        if (this.heroFSM.state === 'swing') { // Assuming heroFSM is accessible and stores the current state
-            const direction = new Phaser.Math.Vector2(this.enemy2.x - this.hero.x, this.enemy2.y - this.hero.y).normalize().scale(600);
+	if (this.physics.overlap(this.hero2, this.enemy2)) {
+        if (this.hero2FSM.state === 'swing') { // Assuming hero2FSM is accessible and stores the current state
+            const direction = new Phaser.Math.Vector2(this.enemy2.x - this.hero2.x, this.enemy2.y - this.hero2.y).normalize().scale(600);
             this.enemy2.setVelocity(direction.x, direction.y);
 
 			this.enemy2.takeDamage(1);
@@ -221,10 +221,10 @@ this.enemies.forEach(enemy2 => {
     }
 	
 		
-	//this.hero.y = this.hero.y + 10;
+	//this.hero2.y = this.hero2.y + 10;
 	
-  // make sure we step (update) the hero's state machine
-  this.heroFSM.step();
+  // make sure we step (update) the hero2's state machine
+  this.hero2FSM.step();
   
   this.enemy2.anims.play('walk-down', true);
   

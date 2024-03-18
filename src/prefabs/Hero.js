@@ -10,7 +10,7 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
 
         // set custom Hero properties
         this.direction = direction 
-        this.heroVelocity = 100    // in pixels
+        this.heroVelocity = 200    // in pixels
         this.dashCooldown = 300    // in ms
         this.hurtTimer = 250       // in ms
 
