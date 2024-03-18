@@ -13,10 +13,19 @@ class Load extends Phaser.Scene {
         frameHeight: 1250,
     });
 	
-	this.load.spritesheet('enemy', 'hero-sheet.png', {
-        frameWidth: 1250,
-        frameHeight: 1250,
+	this.load.spritesheet('enemy', 'enemy-sheet.png', {
+        frameWidth: 312,
+        frameHeight: 312,
     });
+	
+	
+	
+	this.load.spritesheet('boss', 'okay.png', {
+        frameWidth: 312,
+        frameHeight: 312,
+    });
+	
+	
 	
 	
 	
@@ -35,57 +44,59 @@ class Load extends Phaser.Scene {
 		
 		
 		this.anims.create({
-            key: 'walk-down',
+            key: 'walk-down2',
             frameRate: 8,
             repeat: -1,
             frames: this.anims.generateFrameNumbers('enemy', { start: 0, end: 3 }),
         })
         this.anims.create({
-            key: 'walk-right',
+            key: 'walk-right2',
             frameRate: 8,
             repeat: -1,
             frames: this.anims.generateFrameNumbers('enemy', { start: 4, end: 5 }),
         })
         this.anims.create({
-            key: 'walk-up',
+            key: 'walk-up2',
             frameRate: 8,
             repeat: -1,
             frames: this.anims.generateFrameNumbers('enemy', { start: 8, end: 11 }),
         })
         this.anims.create({
-            key: 'walk-left',
+            key: 'walk-left2',
             frameRate: 8,
             repeat: -1,
             frames: this.anims.generateFrameNumbers('enemy', { start: 12, end: 13 }),
         })
 		
 		
-		/*
+		
+		
 		this.anims.create({
-            key: 'walk-down',
+            key: 'walk-down3',
             frameRate: 8,
             repeat: -1,
-            frames: this.anims.generateFrameNumbers('boss', { start: 0, end: 1 }),
+            frames: this.anims.generateFrameNumbers('boss', { start: 0, end: 3 }),
         })
         this.anims.create({
-            key: 'walk-right',
+            key: 'walk-right3',
             frameRate: 8,
             repeat: -1,
-            frames: this.anims.generateFrameNumbers('boss', { start: 0, end: 1 }),
+            frames: this.anims.generateFrameNumbers('boss', { start: 4, end: 5 }),
         })
         this.anims.create({
-            key: 'walk-up',
+            key: 'walk-up3',
             frameRate: 8,
             repeat: -1,
-            frames: this.anims.generateFrameNumbers('boss', { start: 0, end: 1 }),
+            frames: this.anims.generateFrameNumbers('boss', { start: 8, end: 11 }),
         })
         this.anims.create({
-            key: 'walk-left',
+            key: 'walk-left3',
             frameRate: 8,
             repeat: -1,
-            frames: this.anims.generateFrameNumbers('boss', { start: 0, end: 1 }),
+            frames: this.anims.generateFrameNumbers('boss', { start: 12, end: 13 }),
         })
-		*/
+		
+		
 		
 		
 		

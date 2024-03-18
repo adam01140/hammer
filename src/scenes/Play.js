@@ -26,8 +26,8 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     const direction = new Phaser.Math.Vector2(player.x - this.x + 610, player.y - this.y + 610).normalize();
     this.body.setVelocity(direction.x * speed, direction.y * speed);
 	
-	console.log(`Player position: ${player.x}, ${player.y}`);
-	console.log(`Enemy position: ${this.x}, ${this.y}`);
+	//console.log(`Player position: ${player.x}, ${player.y}`);
+	//console.log(`Enemy position: ${this.x}, ${this.y}`);
 
 
 }
@@ -46,6 +46,46 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 
 
 
+
+class Boss extends Phaser.Physics.Arcade.Sprite {
+    constructor(scene, x, y, health) {
+        super(scene, x, y, 'block2'); // Ensure 'block2' is the correct key for your sprite
+        scene.add.existing(this);
+        scene.physics.add.existing(this);
+        this.body.setCollideWorldBounds(true);
+
+        this.health = 100; // Initialize health
+		this.body.setSize(this.width/2, this.height/2);
+        // Create health text for this enemy
+        this.healthText = scene.add.text(50, 20, '' + this.health, { fontSize: '12px', fill: '#fff' });
+    }
+
+   
+	
+	
+	
+	update(player) {
+    const speed = 40;
+    this.healthText.setPosition(this.x-9, this.y - 20);
+    const direction = new Phaser.Math.Vector2(player.x - this.x + 610, player.y - this.y + 610).normalize();
+    this.body.setVelocity(direction.x * speed, direction.y * speed);
+	
+	//console.log(`Player position: ${player.x}, ${player.y}`);
+	//console.log(`Enemy position: ${this.x}, ${this.y}`);
+
+
+}
+
+
+	
+	
+	takeDamage(amount) {
+        this.health -= amount;
+        this.healthText.setText('' + this.health); // Update health text
+    }
+	
+	
+}
 
 
 
@@ -113,6 +153,10 @@ class Play extends Phaser.Scene {
 		this.keys.SPACEKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
 
 		this.enemy = new Enemy(this, 250, 150); // Adjust position as needed
+		
+		
+		this.boss = new Boss(this, 250, 150); // Adjust position as needed
+		
 		
 		this.playerHealth = 100;
 
@@ -255,7 +299,7 @@ this.enemies.forEach(enemy => {
 
 
     this.enemies.forEach(enemy => {
-        enemy.anims.play('walk-down', true);
+        enemy.anims.play('walk-down2', true);
         enemy.healthText.setPosition(enemy.x - 9, enemy.y - 20);
     });
 	
@@ -315,8 +359,9 @@ this.enemies.forEach(enemy => {
   // make sure we step (update) the hero's state machine
   this.heroFSM.step();
   
-  this.enemy.anims.play('walk-down', true);
+  this.enemy.anims.play('walk-down2', true);
   
+  this.boss.anims.play('walk-down3', true);
   
   this.enemy.healthText.setPosition(this.enemy.x-9, this.enemy.y - 20);
 
