@@ -22,10 +22,16 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 	
 	update(player) {
     const speed = 40;
-	this.healthText.setPosition(this.x-9, this.y - 20);
-    const direction = new Phaser.Math.Vector2(player.x+ 610 - this.x, player.y+610 - this.y).normalize();
+    this.healthText.setPosition(this.x-9, this.y - 20);
+    const direction = new Phaser.Math.Vector2(player.x - this.x + 610, player.y - this.y + 610).normalize();
     this.body.setVelocity(direction.x * speed, direction.y * speed);
+	
+	console.log(`Player position: ${player.x}, ${player.y}`);
+	console.log(`Enemy position: ${this.x}, ${this.y}`);
+
+
 }
+
 
 	
 	
@@ -79,6 +85,8 @@ class Play extends Phaser.Scene {
     const boundsWidth = this.map.displayWidth * scale;
     const boundsHeight = this.map.displayHeight * scale;
     this.physics.world.setBounds(0, 0, boundsWidth, boundsHeight);
+	
+	
 
     // The camera viewport should match the game's width and height
     this.cameras.main.setViewport(0, 0, width, height);
@@ -154,18 +162,41 @@ spawnEnemies(numberOfEnemies) {
         }
     }
 
-    handleHeroEnemyCollision(hero, heroFSM, enemy) {
-    // Handle collision: damage the enemy, apply knockback, etc.
+    
+
+
+handleHeroEnemyCollision(hero, heroFSM, enemy) {
+    // Check if the player is swinging
     if (heroFSM.state === 'swing') {
-        const direction = new Phaser.Math.Vector2(enemy.x - hero.x, enemy.y - hero.y).normalize().scale(600);
-        enemy.setVelocity(direction.x, direction.y);
+        // Calculate knockback direction based on the enemy's current velocity
+        let knockbackDirection = enemy.body.velocity.clone();
+
+        // If the enemy is not currently moving, default to pushing them directly away from the player
+        if (knockbackDirection.x === 0 && knockbackDirection.y === 0) {
+            knockbackDirection = new Phaser.Math.Vector2(enemy.x - hero.x, enemy.y - hero.y).normalize();
+        } else {
+            // Otherwise, reverse the direction
+            knockbackDirection.negate();
+        }
+
+        const knockbackSpeed = 600; // Adjust the speed to your liking
+        enemy.body.setVelocity(knockbackDirection.x * knockbackSpeed, knockbackDirection.y * knockbackSpeed);
+
+        // Apply damage to the enemy
         enemy.takeDamage(1);
+
+        // Optional: Reset enemy velocity after a delay to simulate recovery
+        this.time.delayedCall(500, () => {
+            enemy.body.setVelocity(0, 0);
+        });
+
         // Accessing time object from the scene
         hero.scene.time.delayedCall(500, () => {
-            enemy.setVelocity(0, 0);
+            enemy.setVelocity(0, 0); // You might not need this line since it's already in the delayed call above
         });
     }
 }
+
 
 
 
@@ -178,12 +209,14 @@ spawnEnemies(numberOfEnemies) {
 update() {
 
 
-//console.log("hero.x: " + this.hero.x)	
-//console.log("enemy.x: " + this.enemy.x)	
+
+
 
 
 
 this.enemies.forEach(enemy => {
+	
+	enemy.update(this.hero);
         if (this.physics.overlap(this.hero, enemy)) {
             this.handleHeroEnemyCollision(this.hero, this.heroFSM, enemy); // Pass the individual enemy object
         }
@@ -214,6 +247,10 @@ this.enemies.forEach(enemy => {
             }
         }
     });
+	
+	
+	
+	
 
 
 
@@ -242,18 +279,34 @@ this.enemies.forEach(enemy => {
 		
 		
 	if (this.physics.overlap(this.hero, this.enemy)) {
-        if (this.heroFSM.state === 'swing') { // Assuming heroFSM is accessible and stores the current state
-            const direction = new Phaser.Math.Vector2(this.enemy.x - this.hero.x, this.enemy.y - this.hero.y).normalize().scale(600);
-            this.enemy.setVelocity(direction.x, direction.y);
+        if (this.heroFSM.state === 'swing') {
+        // Calculate knockback direction based on the enemy's current velocity
+        let knockbackDirection = this.enemy.body.velocity.clone();
 
-			this.enemy.takeDamage(1);
-			
-			
-            // Optional: Reset enemy velocity after a delay
-            this.time.delayedCall(500, () => {
-                this.enemy.setVelocity(0, 0);
-            });
+        // If the enemy is not currently moving, default to pushing them directly away from the player
+        if (knockbackDirection.x === 0 && knockbackDirection.y === 0) {
+            knockbackDirection = new Phaser.Math.Vector2(enemy.x - this.hero.x, this.enemy.y - this.hero.y).normalize();
+        } else {
+            // Otherwise, reverse the direction
+            knockbackDirection.negate();
         }
+
+        const knockbackSpeed = 600; // Adjust the speed to your liking
+        this.enemy.body.setVelocity(knockbackDirection.x * knockbackSpeed, knockbackDirection.y * knockbackSpeed);
+
+        // Apply damage to the enemy
+        this.enemy.takeDamage(1);
+
+        // Optional: Reset enemy velocity after a delay to simulate recovery
+        this.time.delayedCall(500, () => {
+            this.enemy.body.setVelocity(0, 0);
+        });
+
+        // Accessing time object from the scene
+        this.hero.scene.time.delayedCall(500, () => {
+            this.enemy.setVelocity(0, 0); // You might not need this line since it's already in the delayed call above
+        });
+    }
     }
 	
 		

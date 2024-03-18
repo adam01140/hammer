@@ -13,7 +13,14 @@ const config = {
     pixelArt: true,
     zoom: 2,
 	
-	
+	//this.physics.world.createDebugGraphic();
+
+// Enhanced debugging options
+	arcade: {
+		debug: true,
+		debugShowBody: true,
+		debugShowVelocity: true
+	},
 	render: {
         pixelArt: true, // Enable this for pixel art games; it sets the scale mode to nearest filtering
     },
