@@ -25,7 +25,10 @@ class Load extends Phaser.Scene {
         frameHeight: 312,
     });
 	
-	
+	this.load.spritesheet('hero2', 'hero-sheet2.png', {
+        frameWidth: 32,
+        frameHeight: 32,
+    });
 	
 	
 	
@@ -42,7 +45,71 @@ class Load extends Phaser.Scene {
     create() {
 		
 		
-		
+		// hero animations (walking)
+        this.anims.create({
+            key: 'walk-down4',
+            frameRate: 8,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('hero2', { start: 0, end: 3 }),
+        })
+        this.anims.create({
+            key: 'walk-right4',
+            frameRate: 8,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('hero2', { start: 4, end: 7 }),
+        })
+        this.anims.create({
+            key: 'walk-up4',
+            frameRate: 8,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('hero2', { start: 8, end: 11 }),
+        })
+        this.anims.create({
+            key: 'walk-left4',
+            frameRate: 8,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('hero2', { start: 12, end: 15 }),
+        })
+
+        // hero animations (swinging)
+        this.anims.create({
+            key: 'swing-down4',
+            frameRate: 8,
+            repeat: 0,
+            frames: this.anims.generateFrameNumbers('hero2', { start: 16, end: 19 }),
+        })
+        this.anims.create({
+            key: 'swing-up4',
+            frameRate: 8,
+            repeat: 0,
+            frames: this.anims.generateFrameNumbers('hero2', { start: 20, end: 23 }),
+        })
+        this.anims.create({
+            key: 'swing-right4',
+            frameRate: 8,
+            repeat: 0,
+            frames: this.anims.generateFrameNumbers('hero2', { start: 24, end: 27 }),
+        })
+        this.anims.create({
+            key: 'swing-left4',
+            frameRate: 8,
+            repeat: 0,
+            frames: this.anims.generateFrameNumbers('hero2', { start: 28, end: 31 }),
+        })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		this.anims.create({
             key: 'walk-down2',
             frameRate: 8,
