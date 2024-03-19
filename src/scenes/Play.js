@@ -24,6 +24,8 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 	
 	update(player) {
     const speed = 40;
+	
+
     this.healthText.setPosition(this.x-9, this.y - 20);
     const direction = new Phaser.Math.Vector2(player.x - this.x + 0, player.y - this.y + 0).normalize();
     this.body.setVelocity(direction.x * speed, direction.y * speed);
@@ -108,10 +110,13 @@ class Play extends Phaser.Scene {
 
 	const { width, height } = this.sys.game.config;
 
-    // First, add the map to the scene
     this.map = this.add.image(0, 0, 'map').setOrigin(0);
 
-   
+        // Scale the map to fit the screen
+       const scaleX = this.sys.game.config.width / this.map.width;
+    const scaleY = this.sys.game.config.height / this.map.height;
+    const scale = Math.max(scaleX, scaleY); // Use max to ensure coverage
+    this.map.setScale(scale);
 	
 	
        
@@ -150,12 +155,6 @@ class Play extends Phaser.Scene {
             this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
             this.physics.world.debugGraphic.clear()
         }, this)
-
-        // do camera stuff
-this.cameras.main.setBounds(0, 0, this.map.width, this.map.height);
-//this.cameras.main.startFollow(this.hero, true, 0.5, 0.5);
-this.physics.world.setBounds(0, 0, this.map.width, this.map.height);
-
 
         // update instruction text
         document.getElementById('info').innerHTML = "<strong>CharacterFSM.js</strong> Arrows: move | SPACE: attack | SHIFT: dash attack | F: spin attack | H: hurt (knockback) | D: debug (toggle)"
@@ -320,9 +319,9 @@ this.enemies.forEach(enemy => {
     });
 
     if (Phaser.Input.Keyboard.JustDown(this.keys.QKey)) {
-		
-        this.spawnEnemies(10);
-		this.scene.start('playScene2');
+
+		this.scene.start('playScene');
+		alert("You are about to restart the level");
     }
 
     this.enemies.forEach(enemy => {
