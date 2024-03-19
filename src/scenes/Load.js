@@ -45,6 +45,7 @@ class Load extends Phaser.Scene {
 	this.load.image('menu3', 'menu3.jpg');
 	this.load.image('menu4', 'menu4.jpg');
 	this.load.image('grass', 'grass.jpg');
+	this.load.image('done', 'done.png');
     this.load.image('block', 'block.png');
 	this.load.image('rock', 'rock.jpg');
 	
@@ -278,6 +279,6 @@ this.anims.create({
   
   
         // proceed once loading completes
-        this.scene.start('playScene')
+        this.scene.start('playScene3')
     }
 }

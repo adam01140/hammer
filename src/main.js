@@ -30,7 +30,7 @@ const config = {
             debug: true
         }
     },
-    scene: [Load, Play3, Play4, Play5, Play6, Play2,Play]
+    scene: [Load, Play10, Play4, Play5, Play6, Play2,Play, Play3]
 }
 
 const game = new Phaser.Game(config)

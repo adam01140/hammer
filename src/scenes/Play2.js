@@ -6,7 +6,7 @@ var punchright = 0
 var punchleft = 0
 var score = 0
 var turn = 0
-
+ var won = 0
 // enemy2 class
 class enemy2 extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, health) {
@@ -108,7 +108,10 @@ class Boss2 extends Phaser.Physics.Arcade.Sprite {
 	
 	if(score > 2){
 	
-alert("You have proven worthy of a mighty challenge");		
+alert("You have proven worthy of a mighty challenge");
+
+alert("It is time to fight THE HAMMER");
+won = 1	
 		
 	}
 		
@@ -165,7 +168,8 @@ class Play2 extends Phaser.Scene {
 		
 		this.boss2 = new Boss2(this, 750, 550); // Adjust position as needed
 		this.boss2.setScale(0.5);
-		
+	
+
 		
 		
 		
@@ -176,6 +180,11 @@ class Play2 extends Phaser.Scene {
 		this.hero.setScale(0.10);
 		this.hero.body.setSize(this.hero.width/4, this.hero.height/4);
 		this.lastHeroX = this.hero.x;
+		
+		this.hero.anims.play('walk-right');
+		this.hero.setVisible(true);
+
+		
 		
 		
 // Platform Group and collision setup should go here
@@ -263,12 +272,15 @@ spawnBosses(numberOfBosses) {
     
 update() {
 	
+	if(won == 1){
+	this.scene.start('playScene');	
+	}
 	//this.boss2.healthText.setPosition(this.boss2.x-9, this.boss2.y - 20);
 	
 	const xDifference = Math.abs(this.hero.x - this.lastHeroX);
 
     // Check if the hero has moved 100 units or more
-    if (xDifference >= 350 && turn < 4) {
+    if (xDifference >= 200 && turn < 3) {
 		
 		turn = turn + 1
         this.spawnBosses(1); // Spawn one new boss
