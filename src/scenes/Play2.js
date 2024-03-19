@@ -282,7 +282,7 @@ update() {
 	const xDifference = Math.abs(this.hero.x - this.lastHeroX);
 
     // Check if the hero has moved 100 units or more
-    if (xDifference >= 200 && turn < 3) {
+    if (xDifference >= 200 && turn < 4) {
 		
 		turn = turn + 1
         this.spawnBosses(1); // Spawn one new boss
