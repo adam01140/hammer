@@ -195,14 +195,13 @@ spawnEnemies(numberOfEnemies) {
 
 spawnBosses(numberOfBosses) {
     for (let i = 0; i < numberOfBosses; i++) {
-        let x = this.hero.x; // For example, placing the boss near the hero
-        let y = this.hero.y;
+        let x = this.hero.x+0; // For example, placing the boss near the hero
+        let y = this.hero.y+0;
 
         let boss = new Boss2(this, x, y); // Use the class name directly
         this.bosses.push(boss); // Add the new boss to the array
         this.physics.add.collider(boss, this.platforms);
-
-boss.setScale(0.2);
+		boss.setScale(0.5);
 //boss.body.setSize(this.boss2.width*6, this.boss2.height*7); // Set to match the original boss
 
 
@@ -399,7 +398,83 @@ this.bosses.forEach(boss => {
 	
 	
 	this.bosses.forEach(boss => {
-        boss.anims.play('walk-down5', true);
+		
+		
+		
+        if (this.physics.overlap(this.hero, boss)) {
+	
+            if (this.heroFSM.state === 'swing') {
+				
+                const direction = new Phaser.Math.Vector2(boss.x - this.hero.x, boss.y - this.hero.y).normalize().scale(75);
+                boss.x = boss.x + direction.x
+				boss.y = boss.y + direction.y
+				boss.setVelocity(direction.x, direction.y);
+                console.log(direction.x)
+				
+				
+				boss.takeDamage(1);
+                this.time.delayedCall(200, () => {
+                    boss.setVelocity(0, 0);
+					punchright = 0;
+					punchleft = 0;
+                });
+            } else {
+				
+				if(boss.x > this.hero.x && boss.y < this.hero.y+10){
+					
+				
+				boss.anims.play('walk-down5', true);
+				this.hero.setDepth(1); // Ensure hero is drawn above the boss2
+				boss.setDepth(0); // Ensure boss2 is drawn below the hero
+				const direction2 = new Phaser.Math.Vector2(boss.x - this.hero.x, boss.y - this.hero.y).normalize().scale(655);
+				punchleft = 1;
+				this.hero.setVelocity(-direction2.x, -direction2.y);
+				
+				this.time.delayedCall(200, () => {
+                    this.hero.setVelocity(0, 0);
+					punchleft = 0;
+                });
+				
+				
+				this.hero.x = this.hero.x - direction2.x/100
+				this.hero.y = this.hero.y - direction2.y/100
+				
+				}
+				
+				if(boss.x < this.hero.x && boss.y < this.hero.y+10){
+				
+				boss.anims.play('walk-up5', true);
+				this.hero.setDepth(1); // Ensure hero is drawn above the boss2
+				boss.setDepth(0); // Ensure boss2 is drawn below the hero	
+				const direction2 = new Phaser.Math.Vector2(boss.x - this.hero.x, boss.y - this.hero.y).normalize().scale(655);
+				punchright = 1;
+				this.hero.setVelocity(-direction2.x, -direction2.y);
+				
+				this.time.delayedCall(200, () => {
+                    this.hero.setVelocity(0, 0);
+                });
+				
+				this.hero.x = this.hero.x - direction2.x/100
+				this.hero.y = this.hero.y - direction2.y/100
+				
+				
+				}
+				
+
+					
+			}
+        } else {
+			
+			if(punchleft == 0 && punchright == 0){
+			if(boss.x > this.hero.x){
+				boss.anims.play('walk-left5', true);
+			} else {
+				boss.anims.play('walk-right5', true);
+	
+			}
+			}
+  
+		}
         boss.healthText.setPosition(boss.x - 9, boss.y - 20);
     });
 	
