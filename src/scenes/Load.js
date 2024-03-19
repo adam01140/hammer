@@ -30,6 +30,11 @@ class Load extends Phaser.Scene {
         frameHeight: 32,
     });
 	
+	this.load.spritesheet('pink', 'pink-sheet.png', {
+        frameWidth: 312,
+        frameHeight: 312,
+    });
+	
 	
 	
 	
@@ -43,6 +48,41 @@ class Load extends Phaser.Scene {
 
 
     create() {
+		
+		
+		
+		
+		this.anims.create({
+            key: 'walk-down5',
+            frameRate: 8,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('pink', { start: 8, end: 9 }),
+        })
+        this.anims.create({
+            key: 'walk-right5',
+            frameRate: 8,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('pink', { start: 0, end: 1 }),
+        })
+        this.anims.create({
+            key: 'walk-up5',
+            frameRate: 8,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('pink', { start: 8, end: 9 }),
+        })
+        this.anims.create({
+            key: 'walk-left5',
+            frameRate: 8,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('pink', { start: 4, end: 5 }),
+        })
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		// hero animations (walking)

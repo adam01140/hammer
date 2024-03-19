@@ -52,7 +52,7 @@ class enemy2 extends Phaser.Physics.Arcade.Sprite {
 
 
 
-class boss2 extends Phaser.Physics.Arcade.Sprite {
+class Boss2 extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, health) {
         super(scene, x, y, 'block2'); // Ensure 'block2' is the correct key for your sprite
         scene.add.existing(this);
@@ -100,6 +100,7 @@ class Play2 extends Phaser.Scene {
     constructor() {
         super("playScene2")
 		this.enemies = []; // Array to hold all enemies
+		this.bosses = [];
     }
 
     create() {
@@ -127,7 +128,7 @@ class Play2 extends Phaser.Scene {
 		this.enemy2 = new enemy2(this, 250, 150); // Adjust position as needed
 		
 		
-		this.boss2 = new boss2(this, 250, 150); // Adjust position as needed
+		this.boss2 = new Boss2(this, 250, 150); // Adjust position as needed
 		this.boss2.setScale(0.5);
 		
 		this.playerHealth = 100;
@@ -159,10 +160,13 @@ this.physics.world.setBounds(0, 0, this.map.width, this.map.height);
         // update instruction text
         document.getElementById('info').innerHTML = "<strong>CharacterFSM.js</strong> Arrows: move | SPACE: attack | SHIFT: dash attack | F: spin attack | H: hurt (knockback) | D: debug (toggle)"
 
-
+ 
 
 
 }
+
+
+
 
 
 
@@ -189,6 +193,17 @@ spawnEnemies(numberOfEnemies) {
 
     
 
+spawnBosses(numberOfBosses) {
+    for (let i = 0; i < numberOfBosses; i++) {
+        let x = this.hero.x; // For example, placing the boss near the hero
+        let y = this.hero.y;
+
+        let boss = new Boss2(this, x, y); // Use the class name directly
+        this.bosses.push(boss); // Add the new boss to the array
+        this.physics.add.collider(boss, this.platforms);
+        // Setup other interactions as needed
+    }
+}
 
 
 
@@ -203,15 +218,33 @@ spawnEnemies(numberOfEnemies) {
 update() {
 	
 	
+	
+	 this.bosses.forEach(boss => {
+        boss.update(this.hero);
+       
+    });
+	
+            if (this.heroFSM.state === 'swing') {
+				this.hero.body.setSize(this.hero.width/2, this.hero.height/4);
+				this.spawnBosses(3);
+				
+			}else{
+				this.hero.body.setSize(this.hero.width/4, this.hero.height/4);
+			}
+	
+	
+	
+	
+	
 	if(punchleft == 1){
-		this.boss2.anims.play('walk-down3', true);
+		this.boss2.anims.play('walk-down5', true);
 		this.time.delayedCall(500, () => {
 			punchleft = 0;
         });
 	}
 	
 	if(punchright == 1){
-		this.boss2.anims.play('walk-up3', true);
+		this.boss2.anims.play('walk-up5', true);
 		this.time.delayedCall(500, () => {
 			punchright = 0;
         });
@@ -231,6 +264,7 @@ if(this.hero.y < this.boss2.y-10) {
 if (this.physics.overlap(this.hero, this.boss2)) {
 	
             if (this.heroFSM.state === 'swing') {
+				
                 const direction = new Phaser.Math.Vector2(this.boss2.x - this.hero.x, this.boss2.y - this.hero.y).normalize().scale(75);
                 this.boss2.x = this.boss2.x + direction.x
 				this.boss2.y = this.boss2.y + direction.y
@@ -249,7 +283,7 @@ if (this.physics.overlap(this.hero, this.boss2)) {
 				if(this.boss2.x > this.hero.x && this.boss2.y < this.hero.y+10){
 					
 				
-				this.boss2.anims.play('walk-down3', true);
+				this.boss2.anims.play('walk-down5', true);
 				this.hero.setDepth(1); // Ensure hero is drawn above the boss2
 				this.boss2.setDepth(0); // Ensure boss2 is drawn below the hero
 				const direction2 = new Phaser.Math.Vector2(this.boss2.x - this.hero.x, this.boss2.y - this.hero.y).normalize().scale(655);
@@ -269,7 +303,7 @@ if (this.physics.overlap(this.hero, this.boss2)) {
 				
 				if(this.boss2.x < this.hero.x && this.boss2.y < this.hero.y+10){
 				
-				this.boss2.anims.play('walk-up3', true);
+				this.boss2.anims.play('walk-up5', true);
 				this.hero.setDepth(1); // Ensure hero is drawn above the boss2
 				this.boss2.setDepth(0); // Ensure boss2 is drawn below the hero	
 				const direction2 = new Phaser.Math.Vector2(this.boss2.x - this.hero.x, this.boss2.y - this.hero.y).normalize().scale(655);
@@ -293,9 +327,9 @@ if (this.physics.overlap(this.hero, this.boss2)) {
 			
 			if(punchleft == 0 && punchright == 0){
 			if(this.boss2.x > this.hero.x){
-				this.boss2.anims.play('walk-left3', true);
+				this.boss2.anims.play('walk-left5', true);
 			} else {
-				this.boss2.anims.play('walk-right3', true);
+				this.boss2.anims.play('walk-right5', true);
 	
 			}
 			}
@@ -305,10 +339,20 @@ if (this.physics.overlap(this.hero, this.boss2)) {
 
 this.enemies.forEach(enemy2 => {
 	
-	enemy2.update(this.hero);
+	
         
         enemy2.update(this.hero);
     });
+
+
+this.bosses.forEach(boss => {
+	
+	boss.update(this.hero);
+        
+        boss.update(this.hero);
+    });
+
+
 
     if (Phaser.Input.Keyboard.JustDown(this.keys.QKey)) {
 		
@@ -344,6 +388,12 @@ this.enemies.forEach(enemy2 => {
     this.enemies.forEach(enemy2 => {
         enemy2.anims.play('walk-down2', true);
         enemy2.healthText.setPosition(enemy2.x - 9, enemy2.y - 20);
+    });
+	
+	
+	this.bosses.forEach(boss => {
+        boss.anims.play('walk-down5', true);
+        boss.healthText.setPosition(boss.x - 9, boss.y - 20);
     });
 	
 	

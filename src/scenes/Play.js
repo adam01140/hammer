@@ -203,6 +203,13 @@ spawnEnemies(numberOfEnemies) {
     
 update() {
 	
+	 if (this.heroFSM.state === 'swing') {
+				this.hero.body.setSize(this.hero.width/2, this.hero.height/4);
+				
+			}else{
+				this.hero.body.setSize(this.hero.width/4, this.hero.height/4);
+			}
+	
 	
 	if(punchleft == 1){
 		this.boss.anims.play('walk-down3', true);
@@ -232,6 +239,7 @@ if(this.hero.y < this.boss.y-10) {
 if (this.physics.overlap(this.hero, this.boss)) {
 	
             if (this.heroFSM.state === 'swing') {
+				
                 const direction = new Phaser.Math.Vector2(this.boss.x - this.hero.x, this.boss.y - this.hero.y).normalize().scale(75);
                 this.boss.x = this.boss.x + direction.x
 				this.boss.y = this.boss.y + direction.y
