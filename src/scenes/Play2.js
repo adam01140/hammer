@@ -201,6 +201,12 @@ spawnBosses(numberOfBosses) {
         let boss = new Boss2(this, x, y); // Use the class name directly
         this.bosses.push(boss); // Add the new boss to the array
         this.physics.add.collider(boss, this.platforms);
+
+boss.setScale(0.2);
+//boss.body.setSize(this.boss2.width*6, this.boss2.height*7); // Set to match the original boss
+
+
+
         // Setup other interactions as needed
     }
 }
@@ -221,6 +227,7 @@ update() {
 	
 	 this.bosses.forEach(boss => {
         boss.update(this.hero);
+		
        
     });
 	
