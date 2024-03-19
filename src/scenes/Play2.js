@@ -128,13 +128,13 @@ class Play2 extends Phaser.Scene {
 		this.enemy2 = new enemy2(this, 250, 150); // Adjust position as needed
 		
 		
-		this.boss2 = new Boss2(this, 250, 150); // Adjust position as needed
+		this.boss2 = new Boss2(this, 750, 550); // Adjust position as needed
 		this.boss2.setScale(0.5);
 		
 		this.playerHealth = 100;
 
 	 // Add the hero to the scene
-        this.hero = new Hero(this, 250, 150, 'hero', 0, 'down');
+        this.hero = new Hero(this, 250, 300, 'hero', 0, 'down');
 		this.hero.setScale(0.10);
 		this.hero.body.setSize(this.hero.width/4, this.hero.height/4);
 
@@ -195,9 +195,8 @@ spawnEnemies(numberOfEnemies) {
 
 spawnBosses(numberOfBosses) {
     for (let i = 0; i < numberOfBosses; i++) {
-        let x = this.hero.x+0; // For example, placing the boss near the hero
-        let y = this.hero.y+0;
-
+        let x = this.hero.x + 500//Phaser.Math.Between(100, this.sys.game.config.width - 100);
+            let y = 550
         let boss = new Boss2(this, x, y); // Use the class name directly
         this.bosses.push(boss); // Add the new boss to the array
         this.physics.add.collider(boss, this.platforms);
@@ -232,7 +231,7 @@ update() {
 	
             if (this.heroFSM.state === 'swing') {
 				this.hero.body.setSize(this.hero.width/2, this.hero.height/4);
-				this.spawnBosses(3);
+				this.spawnBosses(1);
 				
 			}else{
 				this.hero.body.setSize(this.hero.width/4, this.hero.height/4);
@@ -362,7 +361,7 @@ this.bosses.forEach(boss => {
 
     if (Phaser.Input.Keyboard.JustDown(this.keys.QKey)) {
 		
-        this.spawnEnemies(10);
+        //this.spawnEnemies(10);
 		this.scene.start('playScene2');
     }
 
