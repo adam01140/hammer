@@ -14,14 +14,12 @@ class Play3 extends Phaser.Scene {
     constructor() {
         super("playScene3")
 		this.enemies = []; // Array to hold all enemies
-		this.music = null; // Add this line
     }
 
     create() {
 
 	
-	this.music = this.sound.add('music', { loop: true });
-    this.music.play();
+
 	const { width, height } = this.sys.game.config;
 
     // First, add the map to the scene
@@ -126,7 +124,7 @@ update() {
 		
 		//this.map = this.add.image(0, 0, 'menu2').setOrigin(0);
 
-        this.scene.start('playScene5');
+        this.scene.start('playScene4');
 		//this.spawnEnemies(10);
     }
 	
