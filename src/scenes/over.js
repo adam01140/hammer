@@ -4,6 +4,8 @@ var health = 100
 var go = 0
 var punchright = 0
 var punchleft = 0
+
+var start3 = 0
 // Enemy class
 class Enemy10 extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, health) {
@@ -352,6 +354,11 @@ if (this.physics.overlap(this.hero, this.boss)) {
 		this.spawnEnemies(10);
     }
 	
+	
+	if(start3 == 0){
+  this.hero.anims.play('walk-right', true);
+  start3 = 1
+  }
 	
 	
   // make sure we step (update) the hero's state machine

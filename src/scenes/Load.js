@@ -39,6 +39,7 @@ class Load extends Phaser.Scene {
 	
 	
 	this.load.audio('swingSound', 'swing.mp3');
+	this.load.audio('music', 'music.mp3');
     this.load.image('map', 'map-scroll.jpg');
 	this.load.image('menu1', 'menu1.jpg');
 	this.load.image('menu2', 'menu2.jpg');

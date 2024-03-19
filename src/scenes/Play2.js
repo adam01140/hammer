@@ -7,6 +7,8 @@ var punchleft = 0
 var score = 0
 var turn = 0
  var won = 0
+ 
+ var start1 = 0
 // enemy2 class
 class enemy2 extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, health) {
@@ -62,7 +64,7 @@ class Boss2 extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this);
         this.body.setCollideWorldBounds(true);
 
-        this.health = 3; // Initialize health
+        this.health = 5; // Initialize health
         // Assuming you want to resize the physics body to half its original sprite size
         this.body.setSize(this.width*6, this.height*7);
         // Now adjust the offset to ensure the resized body is centered
@@ -106,7 +108,7 @@ class Boss2 extends Phaser.Physics.Arcade.Sprite {
     }
 	
 	
-	if(score > 2){
+	if(score > 4){
 	
 alert("You have proven worthy of a mighty challenge");
 
@@ -136,7 +138,7 @@ class Play2 extends Phaser.Scene {
 
     create() {
 		
-	alert("Defeat 3 opponents to prove your karate expetise");	
+	alert("Defeat 5 opponents to prove your karate expetise");	
 	
 	
 
@@ -604,6 +606,12 @@ this.bosses.forEach(boss => {
   this.heroFSM.step();
   
   this.enemy2.anims.play('walk-down2', true);
+  
+  
+  if(start1 == 0){
+  this.hero.anims.play('walk-right', true);
+  start1 = 1
+  }
   
   
   

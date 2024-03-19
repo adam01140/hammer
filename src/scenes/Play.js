@@ -6,6 +6,7 @@ var punchright = 0
 var punchleft = 0
 var start = 0
 var won10 = 0
+var start2 = 0
 // Enemy class
 class Enemy extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, health) {
@@ -465,6 +466,10 @@ this.enemies.forEach(enemy => {
   
   this.enemy.healthText.setPosition(this.enemy.x-9, this.enemy.y - 20);
 
+	if(start2 == 0){
+  this.hero.anims.play('walk-right', true);
+  start2 = 1
+  }
 
 
 }

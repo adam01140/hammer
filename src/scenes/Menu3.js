@@ -134,7 +134,7 @@ update() {
 	
   // make sure we step (update) the hero's state machine
   this.heroFSM.step();
-  
+  scene.sound.play('swingSound');
   
   
 }
